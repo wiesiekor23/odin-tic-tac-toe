@@ -1,11 +1,23 @@
 function Players() {
-  const players = [{playerOne: "X"}, {playerTwo: "O"}];
+  
+  
+  let players = [{playerName: "name", mark: "X"}, {playerName: "name", mark: "O"}];
+  players[0].name = "Mark";
 
   function getPlayers() {
     return players;
   }
+
+  function changePlayers() {
+    players = [players[1], players[0]];
+    return players;
+  }
+  changePlayers();
+  console.log(players);
   return {getPlayers};
 }
+
+Players();
 
 
 
@@ -29,7 +41,7 @@ function GameBoard() {
 
 const board = GameBoard();
 const players = Players();
-board.changeBoardItem(players.getPlayers()[1].playerTwo, 2);
+board.changeBoardItem(players.getPlayers()[1].playerName, 2);
 
 console.log(board.getBoard()[2]);
 /* function checkWinningCondition(array) {
