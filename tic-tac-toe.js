@@ -13,8 +13,7 @@ function Players() {
   }
 
   return { getPlayers, changePlayers };
-}
-
+};
 
 
 function GameBoard() {
@@ -29,7 +28,7 @@ function GameBoard() {
   }
   
   function changeBoardItem(newItem, index) {
-    return board.splice(index, 1, newItem);
+    return board[index] = newItem;
   }
   
   return { getBoard, changeBoardItem };
@@ -41,7 +40,7 @@ function gameFlow() {
   const board = GameBoard();
   
 players.getPlayers()[0].playerName = "Steve";
-players.getPlayers()[1].playerName = "Stacey";
+players.getPlayers()[1].playerName = "Stacey"; 
   
   function play() {
     const activePlayer = players.getPlayers()[0].playerName;
