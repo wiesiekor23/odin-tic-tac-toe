@@ -7,12 +7,12 @@ function Players() {
     return players;
   }
 
-  function changePlayers() {
+  function swapPlayers() {
     players = [players[1], players[0]];
     return players;
   }
 
-  return { getPlayers, changePlayers };
+  return { getPlayers, swapPlayers};
 };
 
 
@@ -27,11 +27,11 @@ function GameBoard() {
     return board;
   }
   
-  function changeBoardItem(newItem, index) {
+  function updateBoardItem(newItem, index) {
     return board[index] = newItem;
   }
   
-  return { getBoard, changeBoardItem };
+  return { getBoard, updateBoardItem };
 };
 
 
@@ -46,14 +46,14 @@ players.getPlayers()[1].playerName = "Stacey";
     const activePlayer = players.getPlayers()[0].playerName;
     const playerMark = players.getPlayers()[0].mark;
     let indexInput = prompt(`${activePlayer}'s turn!`);
-    board.changeBoardItem(playerMark, indexInput);
+    board.updateBoardItem(playerMark, indexInput);
     
     if (checkWinningConditions() == "Win") {
       console.log(`${activePlayer} won`);
     } else if (checkWinningConditions() == "Draw") {
       console.log("It's a draw");
     } else {
-      players.changePlayers();
+      players.swapPlayers();
       play();
     }
   }
@@ -87,7 +87,27 @@ players.getPlayers()[1].playerName = "Stacey";
     return returnedValue;
   };
   
-  play();
+  return {play};
 };
 
-gameFlow();
+//gameFlow();
+
+function displayController() {
+  const gameBoard = GameBoard();
+  const board = gameBoard.getBoard();
+
+  function createBoardDisplay() {
+    const displayBoard = document.querySelector(".game-container");
+    
+    board.forEach((element, index) => {
+      const gameButton = document.createElement("button");
+      gameButton.textContent.content = element;
+      gameButton.classList.add(`cell`, `${index}`);
+      displayBoard.appendChild(gameButton);
+    });
+  }
+
+  createBoardDisplay();
+};
+
+displayController();
