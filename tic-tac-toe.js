@@ -12,7 +12,7 @@ function Players() {
     return players;
   }
 
-  return { getPlayers, swapPlayers};
+  return { getPlayers, swapPlayers };
 };
 
 
@@ -22,45 +22,48 @@ function GameBoard() {
   for (let i = 0; i < 9; i++) {
     board.push("");
   }
-
+  
   function getBoard() {
     return board;
   }
   
   function updateBoardItem(newItem, index) {
-    return board[index] = newItem;
+    board[index] = newItem;
+    return board[index];
   }
   
   return { getBoard, updateBoardItem };
-};
+};  //return { createBoardDisplay, updateDisplay };
 
 
 function gameFlow() {
   const players = Players();
   const board = GameBoard();
   
-players.getPlayers()[0].playerName = "Steve";
-players.getPlayers()[1].playerName = "Stacey"; 
+  players.getPlayers()[0].playerName = "Steve";
+  players.getPlayers()[1].playerName = "Stacey";
   
-  function play() {
+  function play(index) {
     const activePlayer = players.getPlayers()[0].playerName;
     const playerMark = players.getPlayers()[0].mark;
-    let indexInput = prompt(`${activePlayer}'s turn!`);
-    board.updateBoardItem(playerMark, indexInput);
+    board.updateBoardItem(playerMark, index);
     
     if (checkWinningConditions() == "Win") {
       console.log(`${activePlayer} won`);
+      return;
     } else if (checkWinningConditions() == "Draw") {
       console.log("It's a draw");
-    } else {
-      players.swapPlayers();
-      play();
-    }
-  }
+      return;
+    };
+
+    players.swapPlayers();
+    console.log(board.getBoard());
+  };
   
   function checkWinningConditions() {
     const boardCheck = board.getBoard();
-    let returnedValue;
+    let returnedValue = "";
+
     const winningConditions = [
       [boardCheck[0], boardCheck[1], boardCheck[2]],
       [boardCheck[3], boardCheck[4], boardCheck[5]],
@@ -74,7 +77,6 @@ players.getPlayers()[1].playerName = "Stacey";
     
     for (let condition of winningConditions) {
       if (condition.every(cell => cell === "X") || condition.every(cell => cell === "O")) {
-
         returnedValue = "Win";
         return returnedValue;
       };
@@ -83,31 +85,41 @@ players.getPlayers()[1].playerName = "Stacey";
     if (boardCheck.every(cell => cell !== "")) {
       returnedValue = "Draw";
     }
-    
     return returnedValue;
   };
   
-  return {play};
+  return { play, board };
 };
 
-//gameFlow();
-
 function displayController() {
-  const gameBoard = GameBoard();
-  const board = gameBoard.getBoard();
-
-  function createBoardDisplay() {
-    const displayBoard = document.querySelector(".game-container");
+  const game = gameFlow();
+  const displayBoard = document.querySelector(".game-container");
+  const board = game.board.getBoard();
+  
+  function createBoardDisplay(board) {
+    displayBoard.innerHTML = "";
     
     board.forEach((element, index) => {
       const gameButton = document.createElement("button");
-      gameButton.textContent.content = element;
       gameButton.classList.add(`cell`, `${index}`);
       displayBoard.appendChild(gameButton);
     });
-  }
+  };
+  
+  function updateDisplay() {
+    const cells = document.querySelectorAll(`.cell`);
+    cells.forEach((cell, index) => {
+      cell.addEventListener("click", () => {
+        console.log(index);
+        game.play(index);
+        cell.textContent = board[index];
+        console.log(board[index]);
+      }, {once: true});
+    });
+  };
 
-  createBoardDisplay();
+  createBoardDisplay(board);
+  updateDisplay();
 };
 
 displayController();
