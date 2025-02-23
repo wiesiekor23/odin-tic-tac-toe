@@ -125,16 +125,25 @@ function displayController() {
     document.querySelector(".submit-button-one").addEventListener("click", () => {
       const inputOne = document.querySelector("#input-field-one").value;
       game.addPlayerOne(inputOne);
+      playerOneAdded = true;
+      displayBoardWhenReady();
     });
     
     document.querySelector(".submit-button-two").addEventListener("click", () => {
       const inputTwo = document.querySelector("#input-field-two").value;
       game.addPlayerTwo(inputTwo);
+      playerTwoAdded = true;
+      displayBoardWhenReady();
     });
   };
+
+  function displayBoardWhenReady() {
+    if (playerOneAdded && playerTwoAdded) {
+      createBoardDisplay(board);
+      updateDisplay();
+    };
+  };
   
-  createBoardDisplay(board);
-  updateDisplay();
   addNames();
 };
 
