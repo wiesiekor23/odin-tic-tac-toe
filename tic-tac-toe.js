@@ -1,68 +1,91 @@
 function Players() {
-
-
+  
   let players = [{ playerName: "name", mark: "X" }, { playerName: "name", mark: "O" }];
-
+  
   function getPlayers() {
     return players;
   }
-
+  
   function swapPlayers() {
     players = [players[1], players[0]];
     return players;
   }
+  
+  function getActivePlayer() {
+    return players[0].playerName;
+  }
 
-  return { getPlayers, swapPlayers };
+  function getNextPlayer() {
+    return players[1].playerName;
+  }
+
+  function getActivePlayerMark() {
+    return players[0].mark;
+  } 
+  
+  return { getPlayers, swapPlayers, getActivePlayer, getNextPlayer, getActivePlayerMark };
 };
 
 
 function GameBoard() {
   const board = [];
-
+  
   for (let i = 0; i < 9; i++) {
     board.push("");
   }
-
+  
   function getBoard() {
     return board;
   }
-
+  
   function updateBoardItem(newItem, index) {
     board[index] = newItem;
     return board[index];
   }
-
+  
   return { getBoard, updateBoardItem };
 };
 
+const displayMessage = (function() {
+  return function(message) {
+    const messageDiv = document.querySelector(".message-container");
+    messageDiv.textContent = message;
+  };
+})();
 
 function gameFlow() {
   const players = Players();
   const board = GameBoard();
-
+  
   function addPlayerOne(playerOne) {
     players.getPlayers()[0].playerName = playerOne;
   }
-
+  
   function addPlayerTwo(playerTwo) {
     players.getPlayers()[1].playerName = playerTwo;
   }
-
+  
+  
   function play(index) {
-    const activePlayer = players.getPlayers()[0].playerName;
-    const playerMark = players.getPlayers()[0].mark;
-    board.updateBoardItem(playerMark, index);
-
+    const activePlayerMark = players.getActivePlayerMark();
+    const activePlayer = players.getActivePlayer();
+    const nextPlayer = players.getNextPlayer();
+    board.updateBoardItem(activePlayerMark, index);
+    
     if (checkWinningConditions() == "Win") {
-      console.log(`${activePlayer} won`);
+      displayMessage(`${activePlayer} won the game!`);
       return;
     } else if (checkWinningConditions() == "Draw") {
-      console.log("It's a draw");
+      displayMessage("It's a draw");
       return;
+    } else {
+      console.log(nextPlayer);
+      console.log(activePlayer);
+      players.swapPlayers();
+      console.log(board.getBoard());
+      displayMessage(`${nextPlayer}'s turn!`);
     };
-
-    players.swapPlayers();
-    console.log(board.getBoard());
+    
   };
 
   function checkWinningConditions() {
@@ -93,56 +116,68 @@ function gameFlow() {
     return returnedValue;
   };
 
-  return { play, board, addPlayerOne, addPlayerTwo };
+  return { play, board, addPlayerOne, addPlayerTwo, players, checkWinningConditions };
 };
 
 function displayController() {
   const game = gameFlow();
+  const players = game.players;
   const displayBoard = document.querySelector(".game-container");
   const board = game.board.getBoard();
-
+  
+  
   function createBoardDisplay(board) {
     displayBoard.innerHTML = "";
-
+    
     board.forEach((element, index) => {
       const gameButton = document.createElement("button");
       gameButton.classList.add(`cell`, `${index}`);
       displayBoard.appendChild(gameButton);
     });
   };
-
+  
   function updateDisplay() {
     const cells = document.querySelectorAll(`.cell`);
+    const activePlayer = players.getActivePlayer();
+    displayMessage(`${activePlayer}'s turn!`);
     cells.forEach((cell, index) => {
       cell.addEventListener("click", () => {
         game.play(index);
         cell.textContent = board[index];
+        if (game.checkWinningConditions() === "Win") {
+          console.log("WIN RETURNED");
+        }
       }, { once: true });
     });
   };
-
+  
   function addNames() {
-    document.querySelector(".submit-button-one").addEventListener("click", () => {
-      const inputOne = document.querySelector("#input-field-one").value;
+    displayMessage("Add Player Names");
+    let inputOne = "";
+    let inputTwo = "";
+
+    document.querySelector(".submit-button").addEventListener("click", () => {
+      inputOne = document.querySelector("#input-field-one").value;
+      inputTwo = document.querySelector("#input-field-two").value;
       game.addPlayerOne(inputOne);
-      playerOneAdded = true;
-      displayBoardWhenReady();
-    });
-    
-    document.querySelector(".submit-button-two").addEventListener("click", () => {
-      const inputTwo = document.querySelector("#input-field-two").value;
       game.addPlayerTwo(inputTwo);
-      playerTwoAdded = true;
-      displayBoardWhenReady();
+      displayBoardWhenReady(inputOne, inputTwo);
     });
   };
 
-  function displayBoardWhenReady() {
-    if (playerOneAdded && playerTwoAdded) {
+  function displayBoardWhenReady(inputOne, inputTwo) {
+    const activePlayer = players.getActivePlayer();
+
+    if (inputOne === "" || inputTwo === "") {
+      displayMessage("Please add both names to proceed with the game");
+    } else {
+      displayMessage(`${activePlayer}'s turn!`);
+      console.log(players.getPlayers());
       createBoardDisplay(board);
       updateDisplay();
-    };
+    }
   };
+  
   
   addNames();
 };
