@@ -1,16 +1,16 @@
 function Players() {
-  
+
   let players = [{ playerName: "name", mark: "X" }, { playerName: "name", mark: "O" }];
-  
+
   function getPlayers() {
     return players;
   }
-  
+
   function swapPlayers() {
     players = [players[1], players[0]];
     return players;
   }
-  
+
   function getActivePlayer() {
     return players[0].playerName;
   }
@@ -21,33 +21,33 @@ function Players() {
 
   function getActivePlayerMark() {
     return players[0].mark;
-  } 
-  
+  }
+
   return { getPlayers, swapPlayers, getActivePlayer, getNextPlayer, getActivePlayerMark };
 };
 
 
 function GameBoard() {
   const board = [];
-  
+
   for (let i = 0; i < 9; i++) {
     board.push("");
   }
-  
+
   function getBoard() {
     return board;
   }
-  
+
   function updateBoardItem(newItem, index) {
     board[index] = newItem;
     return board[index];
   }
-  
+
   return { getBoard, updateBoardItem };
 };
 
-const displayMessage = (function() {
-  return function(message) {
+const displayMessage = (function () {
+  return function (message) {
     const messageDiv = document.querySelector(".message-container");
     messageDiv.textContent = message;
   };
@@ -56,22 +56,22 @@ const displayMessage = (function() {
 function gameFlow() {
   const players = Players();
   const board = GameBoard();
-  
+
   function addPlayerOne(playerOne) {
     players.getPlayers()[0].playerName = playerOne;
   }
-  
+
   function addPlayerTwo(playerTwo) {
     players.getPlayers()[1].playerName = playerTwo;
   }
-  
-  
+
+
   function play(index) {
     const activePlayerMark = players.getActivePlayerMark();
     const activePlayer = players.getActivePlayer();
     const nextPlayer = players.getNextPlayer();
     board.updateBoardItem(activePlayerMark, index);
-    
+
     if (checkWinningConditions() == "Win") {
       displayMessage(`${activePlayer} won the game!`);
       return;
@@ -85,7 +85,7 @@ function gameFlow() {
       console.log(board.getBoard());
       displayMessage(`${nextPlayer}'s turn!`);
     };
-    
+
   };
 
   function checkWinningConditions() {
@@ -124,33 +124,38 @@ function displayController() {
   const players = game.players;
   const displayBoard = document.querySelector(".game-container");
   const board = game.board.getBoard();
-  
-  
+
   function createBoardDisplay(board) {
     displayBoard.innerHTML = "";
-    
+
     board.forEach((element, index) => {
       const gameButton = document.createElement("button");
       gameButton.classList.add(`cell`, `${index}`);
       displayBoard.appendChild(gameButton);
     });
   };
-  
+
   function updateDisplay() {
-    const cells = document.querySelectorAll(`.cell`);
+    const cells = document.querySelectorAll(".cell");
     const activePlayer = players.getActivePlayer();
     displayMessage(`${activePlayer}'s turn!`);
+
     cells.forEach((cell, index) => {
-      cell.addEventListener("click", () => {
-        game.play(index);
-        cell.textContent = board[index];
-        if (game.checkWinningConditions() === "Win") {
-          console.log("WIN RETURNED");
-        }
-      }, { once: true });
+      cell.addEventListener("click", () => handleClick(index, cell), { once: true });
     });
-  };
-  
+
+    function handleClick(index, cell) {
+      console.log(index);
+      game.play(index);
+      cell.textContent = board[index];
+      if (game.checkWinningConditions() === "Win") {
+        cells.forEach(cell => {
+          cell.replaceWith(cell.cloneNode(true));
+        });
+      }
+    };
+  }
+
   function addNames() {
     displayMessage("Add Player Names");
     let inputOne = "";
@@ -177,8 +182,7 @@ function displayController() {
       updateDisplay();
     }
   };
-  
-  
+
   addNames();
 };
 
