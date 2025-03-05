@@ -140,10 +140,7 @@ function displayController() {
     const activePlayer = players.getActivePlayer();
     displayMessage(`${activePlayer}'s turn!`);
 
-    cells.forEach((cell, index) => {
-      cell.addEventListener("click", () => handleClick(index, cell), { once: true });
-    });
-
+    
     function handleClick(index, cell) {
       console.log(index);
       game.play(index);
@@ -154,20 +151,31 @@ function displayController() {
         });
       }
     };
-  }
 
+    cells.forEach((cell, index) => {
+      cell.addEventListener("click", () => handleClick(index, cell), { once: true });
+    });
+  }
+  
   function addNames() {
     displayMessage("Add Player Names");
     let inputOne = "";
     let inputTwo = "";
 
-    document.querySelector(".submit-button").addEventListener("click", () => {
+    const submitBtn = document.querySelector(".submit-button");
+    
+    submitBtn.addEventListener("click", addPlayerNames);
+
+    function addPlayerNames() {
       inputOne = document.querySelector("#input-field-one").value;
       inputTwo = document.querySelector("#input-field-two").value;
       game.addPlayerOne(inputOne);
       game.addPlayerTwo(inputTwo);
       displayBoardWhenReady(inputOne, inputTwo);
-    });
+      if (inputOne !=="" && inputTwo !=="") {
+        submitBtn.removeEventListener("click", addPlayerNames);
+      }
+    }
   };
 
   function displayBoardWhenReady(inputOne, inputTwo) {
@@ -187,3 +195,29 @@ function displayController() {
 };
 
 displayController();
+
+
+/* function setupControls() {
+  const resetButton = document.getElementById("reset-button");
+  const restartButton = document.getElementById("restart-button");
+
+  // Reset Button: Clears the board but keeps player names
+  resetButton.addEventListener("click", () => {
+    const cells = document.querySelectorAll(".cell");
+    game.board.getBoard().fill(""); // Reset the board array
+    cells.forEach(cell => (cell.textContent = "")); // Clear cell contents
+    displayMessage(`${game.players.getActivePlayer()}'s turn!`); // Update message
+  });
+
+  // Restart Button: Clears the board and resets player names
+  restartButton.addEventListener("click", () => {
+    const cells = document.querySelectorAll(".cell");
+    game.board.getBoard().fill(""); // Reset the board array
+    cells.forEach(cell => (cell.textContent = "")); // Clear cell contents
+    game.addPlayerOne(""); // Clear player one name
+    game.addPlayerTwo(""); // Clear player two name
+    displayMessage("Add Player Names"); // Reset the message
+    location.reload(); // Reload the game (optional for a hard reset)
+  });
+}
+ */
