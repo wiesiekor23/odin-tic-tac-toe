@@ -30,9 +30,9 @@ function Players() {
 function GameBoard() {
   const board = [];
 
-  for (let i = 0; i < 9; i++) {
-    board.push("");
-  }
+    for (let i = 0; i < 9; i++) {
+      board.push("");
+    }
 
   function getBoard() {
     return board;
@@ -79,10 +79,7 @@ function gameFlow() {
       displayMessage("It's a draw");
       return;
     } else {
-      console.log(nextPlayer);
-      console.log(activePlayer);
       players.swapPlayers();
-      console.log(board.getBoard());
       displayMessage(`${nextPlayer}'s turn!`);
     };
 
@@ -115,34 +112,54 @@ function gameFlow() {
     }
     return returnedValue;
   };
-
+  
   return { play, board, addPlayerOne, addPlayerTwo, players, checkWinningConditions };
 };
 
 function displayController() {
   const game = gameFlow();
   const players = game.players;
-  const displayBoard = document.querySelector(".game-container");
   const board = game.board.getBoard();
 
+  const submitBtn = document.querySelector(".submit-button");
+  const displayBoard = document.querySelector(".game-container");
+  const restartBtn = document.querySelector(".restart-button");
+  
+  let inputOne = "";
+  let inputTwo = "";
+  
   function createBoardDisplay(board) {
     displayBoard.innerHTML = "";
-
+    
     board.forEach((element, index) => {
       const gameButton = document.createElement("button");
       gameButton.classList.add(`cell`, `${index}`);
       displayBoard.appendChild(gameButton);
     });
   };
+  
+  function restartButton() {
+    restartBtn.addEventListener("click", handleRestart);
+    
+    function handleRestart() {
+      submitBtn.removeEventListener("click", addPlayerNames);
+      restartBtn.removeEventListener("click", handleRestart);
 
+      createBoardDisplay(board);
+      displayController();
+      removePlayerNamesDisplay();
+    }
+  }
+  
+  function removePlayerNamesDisplay() {
+    document.querySelector("#input-field-one").value = "";
+    document.querySelector("#input-field-two").value = "";
+  }
+  
   function updateDisplay() {
     const cells = document.querySelectorAll(".cell");
-    const activePlayer = players.getActivePlayer();
-    displayMessage(`${activePlayer}'s turn!`);
-
     
     function handleClick(index, cell) {
-      console.log(index);
       game.play(index);
       cell.textContent = board[index];
       if (game.checkWinningConditions() === "Win") {
@@ -151,7 +168,7 @@ function displayController() {
         });
       }
     };
-
+    
     cells.forEach((cell, index) => {
       cell.addEventListener("click", () => handleClick(index, cell), { once: true });
     });
@@ -159,65 +176,37 @@ function displayController() {
   
   function addNames() {
     displayMessage("Add Player Names");
-    let inputOne = "";
-    let inputTwo = "";
-
-    const submitBtn = document.querySelector(".submit-button");
     
     submitBtn.addEventListener("click", addPlayerNames);
-
-    function addPlayerNames() {
-      inputOne = document.querySelector("#input-field-one").value;
-      inputTwo = document.querySelector("#input-field-two").value;
-      game.addPlayerOne(inputOne);
-      game.addPlayerTwo(inputTwo);
-      displayBoardWhenReady(inputOne, inputTwo);
-      if (inputOne !=="" && inputTwo !=="") {
-        submitBtn.removeEventListener("click", addPlayerNames);
-      }
-    }
   };
+  
+  function addPlayerNames() {
+    inputOne = document.querySelector("#input-field-one").value;
+    inputTwo = document.querySelector("#input-field-two").value;
 
+    game.addPlayerOne(inputOne);
+    game.addPlayerTwo(inputTwo);
+    displayBoardWhenReady(inputOne, inputTwo);
+    if (inputOne !=="" && inputTwo !=="") {
+      submitBtn.removeEventListener("click", addPlayerNames);
+      removePlayerNamesDisplay();
+    }
+  }
+  
   function displayBoardWhenReady(inputOne, inputTwo) {
     const activePlayer = players.getActivePlayer();
-
+    
     if (inputOne === "" || inputTwo === "") {
       displayMessage("Please add both names to proceed with the game");
     } else {
       displayMessage(`${activePlayer}'s turn!`);
-      console.log(players.getPlayers());
       createBoardDisplay(board);
       updateDisplay();
     }
   };
-
+  
+  restartButton();
   addNames();
 };
 
 displayController();
-
-
-/* function setupControls() {
-  const resetButton = document.getElementById("reset-button");
-  const restartButton = document.getElementById("restart-button");
-
-  // Reset Button: Clears the board but keeps player names
-  resetButton.addEventListener("click", () => {
-    const cells = document.querySelectorAll(".cell");
-    game.board.getBoard().fill(""); // Reset the board array
-    cells.forEach(cell => (cell.textContent = "")); // Clear cell contents
-    displayMessage(`${game.players.getActivePlayer()}'s turn!`); // Update message
-  });
-
-  // Restart Button: Clears the board and resets player names
-  restartButton.addEventListener("click", () => {
-    const cells = document.querySelectorAll(".cell");
-    game.board.getBoard().fill(""); // Reset the board array
-    cells.forEach(cell => (cell.textContent = "")); // Clear cell contents
-    game.addPlayerOne(""); // Clear player one name
-    game.addPlayerTwo(""); // Clear player two name
-    displayMessage("Add Player Names"); // Reset the message
-    location.reload(); // Reload the game (optional for a hard reset)
-  });
-}
- */
