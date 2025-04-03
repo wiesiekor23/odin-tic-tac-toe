@@ -8,7 +8,6 @@ function Players() {
 
   function swapPlayers() {
     players = [players[1], players[0]];
-    return players;
   }
 
   function getActivePlayer() {
@@ -40,7 +39,6 @@ function GameBoard() {
 
   function updateBoardItem(newItem, index) {
     board[index] = newItem;
-    return board[index];
   }
 
   return { getBoard, updateBoardItem };
@@ -125,8 +123,6 @@ function displayController() {
   const displayBoard = document.querySelector(".game-container");
   const restartBtn = document.querySelector(".restart-button");
   
-  let inputOne = "";
-  let inputTwo = "";
   
   function createBoardDisplay(board) {
     displayBoard.innerHTML = "";
@@ -144,7 +140,7 @@ function displayController() {
     function handleRestart() {
       submitBtn.removeEventListener("click", addPlayerNames);
       restartBtn.removeEventListener("click", handleRestart);
-
+      
       createBoardDisplay(board);
       displayController();
       removePlayerNamesDisplay();
@@ -181,9 +177,12 @@ function displayController() {
   };
   
   function addPlayerNames() {
+    let inputOne = "";
+    let inputTwo = "";
+
     inputOne = document.querySelector("#input-field-one").value;
     inputTwo = document.querySelector("#input-field-two").value;
-
+    
     game.addPlayerOne(inputOne);
     game.addPlayerTwo(inputTwo);
     displayBoardWhenReady(inputOne, inputTwo);

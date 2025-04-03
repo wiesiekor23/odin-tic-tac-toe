@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,18 +8,27 @@
     <script src="tic-tac-toe.js" defer></script>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="message-container"></div>
-    <div class="names-conatiner"><p><h3>Player Names</h3></p>
-        <div class="player one">Player One</div>
+    <div class="main-container">
+        <div class="message-container"></div>
+        <div class="names-conatiner">
+            <p>
+            <h3>Player Names</h3>
+            </p>
+            <div class="player one">Player One</div>
             <input type="text" id="input-field-one" required>
-        <div class="player two">Player Two</div>
+            <div class="player two">Player Two</div>
             <input type="text" id="input-field-two" required>
             <div>
-                <button class="submit-button">Submit</button>
+                <div class="control-buttons">
+                    <button class="submit-button">Submit</button>
+                    <div class="restart-button"><button>RESTART</button></div>
+                </div>
             </div>
+        </div>
+        <div class="game-container"></div>1
     </div>
-    <div class="game-container"></div>
-    <div class="restart-button"><button>RESTART</button></div>
 </body>
+
 </html>

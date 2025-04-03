@@ -1,8 +1,36 @@
+@font-face {
+    font-family: 'Flux-normal';
+    src: url('fonts/Flux-font/flux_architect_regular-webfont.woff2') format('woff2'),
+         url('fonts/Flux-font/flux_architect_regular-webfont.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Flux-italic';
+    src: url('fonts/Flux-font/flux_architect_italic-webfont.woff2') format('woff2'),
+         url('fonts/Flux-font/flux_architect_italic-webfont.woff') format('woff');
+}
+
 body {
     height: 100vh;
     margin: 0;
+    font-family: 'Flux-italic';
+}
+
+.main-container {
     display: grid;
-    grid-template-rows: 1fr 1fr 4fr 1fr;
+    grid-template-columns: 30vw 70vw;
+    grid-template-rows: 15vh 75vh;
+}
+
+.message-container {
+    grid-column: 1 / 3;
+    justify-self: center;
+    align-self: center;
+    font-size: 4rem;
+}
+
+.names-container {
+    font-family: 'Flux-normal';
 }
 
 .game-container {
