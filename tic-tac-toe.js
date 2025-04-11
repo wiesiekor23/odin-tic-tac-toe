@@ -1,6 +1,6 @@
 function Players() {
 
-  let players = [{ playerName: "name", mark: "X" }, { playerName: "name", mark: "O" }];
+  let players = [{ playerName: "", mark: "X" }, { playerName: "", mark: "O" }];
 
   function getPlayers() {
     return players;
@@ -48,6 +48,11 @@ const displayMessage = (function () {
   return function (message) {
     const messageDiv = document.querySelector(".message-container");
     messageDiv.textContent = message;
+
+    /* Reapplies message fadeIn animation - CSS */
+    messageDiv.style.animation = "none";
+    void messageDiv.offsetWidth;
+    messageDiv.style.animation = ""; 
   };
 })();
 
