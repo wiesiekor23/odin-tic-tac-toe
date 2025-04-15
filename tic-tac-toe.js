@@ -51,7 +51,7 @@ const displayMessage = (function () {
 
     /* Reapplies message fadeIn animation - CSS */
     messageDiv.style.animation = "none";
-    void messageDiv.offsetWidth;
+    messageDiv.offsetWidth;
     messageDiv.style.animation = ""; 
   };
 })();
